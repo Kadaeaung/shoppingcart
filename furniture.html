@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Funature Style</title>
+	<link rel="stylesheet" type="text/css" href="funaturestyle.css">
+	<script type="text/javascript" src="jquery.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			//data insent
+			getData();//data refresh louk poe
+
+			//change qty
+			$('#tbody').on('change','.qty',function(){
+					var id=$(this).data('id');
+					var qty=$(this).val();
+
+					var loItem= localStorage.getItem('items');
+				var itemArr=JSON.parse(loItem);
+
+				itemArr[id].qty=qty;
+
+				if(qty==0){
+					itemArr.splice(id,1);
+				}
+
+				localStorage.setItem('items',JSON.stringify(itemArr));
+				getData();
+
+				})
+			//change data count
+			
+			//table show hide 
+			   $(".box").hide();
+              $("#btn").click(function(){
+              	       $(".box").animate({
+                      width: "toggle"
+            });
+              })
+			//remove items
+			$('#tbody').on('click','.remove', function()
+			{
+				//alert('ok');
+				var id=$(this).data('id');//no
+					
+				var loItem= localStorage.getItem('items');
+				var itemArr=JSON.parse(loItem);
+
+				//delete for remove button
+				itemArr.splice(id,1);
+
+				localStorage.setItem('items',JSON.stringify(itemArr));
+				getData();
+			})
+			$('.addtocash').click(function () {
+								
+					var id= $(this).data('id');
+					var photo= $(this).data('photo');
+					var name= $(this).data('name');
+					var price= $(this).data('price');
+
+					//alert(`id= ${id}, photo= ${photo}, name=${name}, price=${price}`);
+
+					var item={id:id, name:name, photo:photo, price: price, qty:1};
+
+					var loItem=localStorage.getItem('items');//string
+					var itemArr;
+
+					if(loItem==null)
+					{
+						itemArr=Array();
+					}
+					else
+					{
+						itemArr =JSON.parse(loItem);
+					}
+
+					var exist;
+
+					$.each(itemArr,function(i,v){
+						if(id==v.id){
+							v.qty++;
+							exist=1;	
+						}
+					})
+
+					if(!exist)
+					{
+						itemArr.push(item);
+					}
+
+					localStorage.setItem('items',JSON.stringify(itemArr));
+					var a=localStorage.getItem('items');
+				var b=JSON.parse(a);
+
+
+				 noti=b;
+				 c=noti.length;
+				console.log(noti.length);
+					$("#mpt").attr({"data-count" : c });
+					getData();
+
+			})
+			// show Noti value
+			var a=localStorage.getItem('items');
+				var b=JSON.parse(a);
+
+
+				var noti=b;
+				var c=noti.length;
+				$("#mpt").attr({"data-count" : c });
+			$("#btn").click(function () { 
+				var a=localStorage.getItem('items');
+				var b=JSON.parse(a);
+
+
+				 noti=b;
+				 c=noti.length;
+				console.log(noti.length);
+				
+				$("#mpt").attr({"data-count" : c });
+				getData();
+               
+			})
+             
+			//get data
+			function getData(){
+				var loItem= localStorage.getItem('items');
+				var html="";
+
+				//var subtotal=0;
+				if (loItem != null) {
+					itemArr =JSON.parse(loItem);
+					var total=0;
+					
+					/*loop */$.each(itemArr,function(i,v){
+						var subtotal = v.qty *v.price;
+						total+=subtotal;
+						
+						html+=`<tr> 
+								<td><img src="${v.photo}"></td>
+								<td>${v.name}</td>
+								<td>${v.price}</td>
+								<td> <input type="number" 
+											value="${v.qty}" 
+											class="qty" data-id="${i}">
+								</td>
+
+								<td>${subtotal}</td>
+								<td><button class="remove" data-id="${i}">x</button></td>
+								</tr>`;
+					})
+
+					html+= `<tr> 
+								<td colspan="6">
+								<center>
+									Total: ${total}
+								</center>
+								</td>
+							</tr>`;
+                     
+					$('#tbody').html(html);
+					
+				}else{
+
+				}
+			}
+		})
+	</script>
+</head>
+<body>	
+
+
+	<div class="nav" >
+		<div class="nav_left">
+			<img src="nav1.png">
+			
+		</div>
+		<div id="h2">Comfy House</div>
+
+		<div class="nav_right">
+			 <button  id="btn"><i data-count=""  id="mpt" class="fa fa-shopping-cart fa-5x fa-border icon-grey badge"><img src="cart1.png" ></i> </button>
+
+
+
+				<div class="box">
+   	<table border="1" cellpadding="3" cellspacing="0" class="table">
+		<thead>
+			<tr>
+				<th>Photo</th>
+				<th>Name</th>
+				<th>Perprice</th>
+				<th>Quantity</th>
+				<th>Sub Total</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody id="tbody">
+			
+		</tbody>	
+		</table>
+   </div></button>
+		</div>
+
+	</div>
+   
+	
+	
+	<div id="funature">
+		<h1>Funature Collection</h1>
+		<button>Shop Now</button>
+
+		
+
+	</div>
+
+
+
+	<div id="cover">
+
+		<img src="images.jpeg">
+
+	</div>
+	
+
+		
+		
+
+	<div>
+		<h1>Our Product</h1>
+	</div>
+
+	<div class="product"> 
+		<div>
+			<article class="mid">
+				<img src="f1.jpeg" id="img">
+				<div class="mc"><button data-id="1" data-photo="f1.jpeg" data-name="Item 1" data-price="1000" class="addtocash">Add to card</button></div>
+				<h4>Item 1</h4>
+				<p> $1000</p>
+				
+			</article>
+		</div>
+
+		<div>
+			<article class="mid">
+				<img src="f2.jpeg" id="img">
+				<div class="mc"><button data-id="2" data-photo="f2.jpeg" data-name="Item 2" data-price="1500"  class="addtocash">Add to card</button></div>
+				<h4>Item 2</h4>
+				<p> $1500</p>
+				
+			</article>
+		</div>
+
+		<div>
+			<article class="mid"
+			>
+				<img src="f3.jpeg" width="400px" height="225px" id="img">
+				<div class="mc"><button data-id="3" data-photo="f3.jpeg" data-name="Item 3" data-price="1800" class="addtocash">Add to card</button></div>
+				<h4>Item 3</h4>
+				<p> $1800</p>
+				
+			</article>
+		</div>
+	</div>	
+
+
+		
+
+</body>
+</html>
